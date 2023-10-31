@@ -57,3 +57,29 @@ module "appgroup" {
     }
   }
 }
+
+# Sample applications
+# Virtual desktop application name must be 1 - 260 characters long, contain only letters, numbers and hyphens.
+resource "azurerm_virtual_desktop_application" "edge" {
+  name                         = "MicrosoftEdge"
+  application_group_id         = module.appgroup.azurerm_virtual_desktop_application_group_id
+  friendly_name                = "Microsoft Edge"
+  description                  = "Microsoft Edge"
+  path                         = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  command_line_argument_policy = "DoNotAllow"
+  command_line_arguments       = "--incognito"
+  show_in_portal               = false
+  icon_path                    = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  icon_index                   = 0
+}
+
+resource "azurerm_virtual_desktop_application" "wordpad" {
+  name                         = "WordPad"
+  application_group_id         = module.appgroup.azurerm_virtual_desktop_application_group_id
+  friendly_name                = "WordPad"
+  description                  = "WordPad application"
+  path                         = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
+  command_line_argument_policy = "DoNotAllow" // Allow, DoNotAllow, Require
+  icon_path                    = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
+  icon_index                   = 0 
+}

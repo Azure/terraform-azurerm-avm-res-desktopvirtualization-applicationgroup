@@ -20,7 +20,7 @@ variable "dag" {
 
 variable "dagtype" {
   type        = string
-  default     = "Desktop"
+  default     = "RemoteApp"
   description = "The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'."
 }
 

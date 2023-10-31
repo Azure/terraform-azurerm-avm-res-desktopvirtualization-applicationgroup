@@ -6,5 +6,4 @@ output "azurerm_virtual_desktop_application_group" {
 output "azurerm_virtual_desktop_application_group_id" {
   description = "ID of the Azure Virtual Desktop DAG"
   value       = azurerm_virtual_desktop_application_group.dag.id
-
 }
