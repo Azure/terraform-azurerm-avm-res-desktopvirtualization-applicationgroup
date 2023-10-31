@@ -1,8 +1,14 @@
+# Fetcg the Azure Virtual Desktop host pool
+data "azurerm_virtual_desktop_host_pool" "this" {
+  name                = var.hostpool
+  resource_group_name = var.resource_group_name
+}
+
 # Create Azure Virtual Desktop application grop
 resource "azurerm_virtual_desktop_application_group" "dag" {
   location            = var.location
   resource_group_name = var.resource_group_name
-  host_pool_id        = var.host_pool_id
+  host_pool_id        = data.azurerm_virtual_desktop_host_pool.this.id
   type                = var.dagtype
   name                = var.dag
   friendly_name       = var.dag

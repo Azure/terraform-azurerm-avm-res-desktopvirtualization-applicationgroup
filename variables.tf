@@ -33,9 +33,9 @@ variable "location" {
   description = "The Azure location where the resources will be deployed."
 }
 
-variable "host_pool_id" {
+variable "hostpool" {
   type        = string
-  description = "The ID of the AVD Host Pool to assign the application group to."
+  description = "The name of the AVD Host Pool to assign the application group to."
 }
 
 variable "user_group_name" {

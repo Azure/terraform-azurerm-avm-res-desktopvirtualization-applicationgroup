@@ -24,11 +24,17 @@ variable "dagtype" {
   description = "The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'."
 }
 
-variable "host_pool_id" {
+variable "host_pool" {
   type        = string
-  default = "/subscriptions/b0aeeba8-4430-4cf1-acbc-6e24cadf86c9/resourceGroups/rg-avd-avd1-dev-use-service-objects/providers/Microsoft.DesktopVirtualization/hostpools/fbde3f95-6492-41bd-8952-7723bc788f8c"
-  description = "The ID of the AVD Host Pool to assign the application group to."
+  default     = "avdhostpool"
+  description = "The name of the AVD Host Pool to assign the application group to."
 
+}
+
+variable "resource_group_name" {
+  type        = string
+  default     = "rg-avm-test"
+  description = "The resource group where the AVD Host Pool is deployed."
 }
 
 variable "user_group_name" {

@@ -46,9 +46,9 @@ module "appgroup" {
   enable_telemetry    = var.enable_telemetry
   dagtype             = var.dagtype
   dag                 = var.dag
-  host_pool_id        = var.host_pool_id
+  hostpool            = var.host_pool
   user_group_name     = var.user_group_name
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = var.resource_group_name
   location            = azurerm_resource_group.this.location
   diagnostic_settings = {
     to_law = {
