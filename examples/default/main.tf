@@ -49,7 +49,6 @@ module "appgroup" {
   hostpool            = var.host_pool
   user_group_name     = var.user_group_name
   resource_group_name = var.resource_group_name
-  location            = var.location
   diagnostic_settings = {
     to_law = {
       name                  = "to-law"
