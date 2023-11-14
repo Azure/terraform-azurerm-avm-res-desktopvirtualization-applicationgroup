@@ -1,3 +1,3 @@
-# Default example
+# Remoteapp example
 
-This deploys the module in its simplest form.
+This deploys the module for remoteapp with 2 sample applications
