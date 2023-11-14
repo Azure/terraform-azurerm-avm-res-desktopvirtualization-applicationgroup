@@ -10,6 +10,8 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.0.0)
 
+- <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) (>= 2.6.0)
+
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71.0)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0)
@@ -18,7 +20,7 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
-- <a name="provider_azuread"></a> [azuread](#provider\_azuread)
+- <a name="provider_azuread"></a> [azuread](#provider\_azuread) (>= 2.6.0)
 
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.71.0)
 
@@ -59,12 +61,6 @@ Type: `string`
 ### <a name="input_hostpool"></a> [hostpool](#input\_hostpool)
 
 Description: The name of the AVD Host Pool to assign the application group to.
-
-Type: `string`
-
-### <a name="input_location"></a> [location](#input\_location)
-
-Description: The Azure location where the resources will be deployed.
 
 Type: `string`
 

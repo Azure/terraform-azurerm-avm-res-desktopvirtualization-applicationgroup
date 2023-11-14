@@ -13,6 +13,7 @@ resource "azurerm_virtual_desktop_application_group" "dag" {
   name                = var.dag
   friendly_name       = var.dag
   description         = "AVD Desktop application group"
+  tags                = var.tags
 }
 
 # Get an existing built-in role definition

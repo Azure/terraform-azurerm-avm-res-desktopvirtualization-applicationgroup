@@ -28,11 +28,6 @@ variable "dagtype" {
   description = "The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'."
 }
 
-variable "location" {
-  type        = string
-  description = "The Azure location where the resources will be deployed."
-}
-
 variable "hostpool" {
   type        = string
   description = "The name of the AVD Host Pool to assign the application group to."
