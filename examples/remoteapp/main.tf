@@ -81,5 +81,5 @@ resource "azurerm_virtual_desktop_application" "wordpad" {
   path                         = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
   command_line_argument_policy = "DoNotAllow" // Allow, DoNotAllow, Require
   icon_path                    = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
-  icon_index                   = 0 
+  icon_index                   = 0
 }
