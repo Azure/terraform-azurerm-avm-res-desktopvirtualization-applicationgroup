@@ -134,7 +134,7 @@ Description: The name of the AVD Application Group.
 
 Type: `string`
 
-Default: `"appgroup-1"`
+Default: `"appgroup-2"`
 
 ### <a name="input_dagtype"></a> [dagtype](#input\_dagtype)
 
