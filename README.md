@@ -46,15 +46,9 @@ The following resources are used by this module:
 
 The following input variables are required:
 
-### <a name="input_dag"></a> [dag](#input\_dag)
+### <a name="input_description"></a> [description](#input\_description)
 
-Description: The name of the AVD Application Group.
-
-Type: `string`
-
-### <a name="input_dagtype"></a> [dagtype](#input\_dagtype)
-
-Description: The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'.
+Description: The description of the AVD Application Group.
 
 Type: `string`
 
@@ -64,9 +58,21 @@ Description: The name of the AVD Host Pool to assign the application group to.
 
 Type: `string`
 
+### <a name="input_name"></a> [name](#input\_name)
+
+Description: The name of the AVD Application Group.
+
+Type: `string`
+
 ### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
 
 Description: The resource group where the resources will be deployed.
+
+Type: `string`
+
+### <a name="input_type"></a> [type](#input\_type)
+
+Description: The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'.
 
 Type: `string`
 

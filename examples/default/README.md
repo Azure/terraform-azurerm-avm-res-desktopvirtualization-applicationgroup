@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # Default example
 
-This deploys the module in its simplest form.
+This deploys the module in its simplest form for Desktop Application Group with the Desktop type
 
 ```hcl
 terraform {
@@ -50,8 +50,9 @@ resource "azurerm_log_analytics_workspace" "this" {
 module "appgroup" {
   source              = "../../"
   enable_telemetry    = var.enable_telemetry
-  dagtype             = var.dagtype
-  dag                 = var.dag
+  type                = var.type
+  name                = var.name
+  description         = var.description
   hostpool            = var.host_pool
   user_group_name     = var.user_group_name
   resource_group_name = var.resource_group_name
@@ -100,21 +101,13 @@ No required inputs.
 
 The following input variables are optional (have default values):
 
-### <a name="input_dag"></a> [dag](#input\_dag)
+### <a name="input_description"></a> [description](#input\_description)
 
-Description: The name of the AVD Application Group.
-
-Type: `string`
-
-Default: `"appgroup-1"`
-
-### <a name="input_dagtype"></a> [dagtype](#input\_dagtype)
-
-Description: The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'.
+Description: The description of the AVD Application Group.
 
 Type: `string`
 
-Default: `"Desktop"`
+Default: `"AVD Application Group"`
 
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
@@ -142,6 +135,14 @@ Type: `string`
 
 Default: `"eastus"`
 
+### <a name="input_name"></a> [name](#input\_name)
+
+Description: The name of the AVD Application Group.
+
+Type: `string`
+
+Default: `"appgroup-1"`
+
 ### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
 
 Description: The resource group where the AVD Host Pool is deployed.
@@ -149,6 +150,14 @@ Description: The resource group where the AVD Host Pool is deployed.
 Type: `string`
 
 Default: `"rg-avm-test"`
+
+### <a name="input_type"></a> [type](#input\_type)
+
+Description: The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'.
+
+Type: `string`
+
+Default: `"Desktop"`
 
 ### <a name="input_user_group_name"></a> [user\_group\_name](#input\_user\_group\_name)
 
