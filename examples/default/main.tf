@@ -44,8 +44,9 @@ resource "azurerm_log_analytics_workspace" "this" {
 module "appgroup" {
   source              = "../../"
   enable_telemetry    = var.enable_telemetry
-  dagtype             = var.dagtype
-  dag                 = var.dag
+  type                = var.type
+  name                = var.name
+  description         = var.description
   hostpool            = var.host_pool
   user_group_name     = var.user_group_name
   resource_group_name = var.resource_group_name

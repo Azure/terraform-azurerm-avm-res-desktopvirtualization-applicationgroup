@@ -8,20 +8,26 @@ If it is set to false, then no telemetry will be collected.
 DESCRIPTION
 }
 
-variable "dag" {
+variable "name" {
   type        = string
   description = "The name of the AVD Application Group."
   default     = "appgroup-2"
   validation {
-    condition     = can(regex("^[a-z0-9-]{3,24}$", var.dag))
+    condition     = can(regex("^[a-z0-9-]{3,24}$", var.name))
     error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
   }
 }
 
-variable "dagtype" {
+variable "type" {
   type        = string
   default     = "RemoteApp"
   description = "The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'."
+}
+
+variable "description" {
+  type        = string
+  default     = "AVD Application Group"
+  description = "The description of the AVD Application Group."
 }
 
 variable "host_pool" {

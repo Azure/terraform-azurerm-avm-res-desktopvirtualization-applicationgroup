@@ -6,13 +6,13 @@ data "azurerm_virtual_desktop_host_pool" "this" {
 
 # Create Azure Virtual Desktop application grop
 resource "azurerm_virtual_desktop_application_group" "dag" {
+  name                = var.name
   location            = data.azurerm_virtual_desktop_host_pool.this.location
   resource_group_name = var.resource_group_name
   host_pool_id        = data.azurerm_virtual_desktop_host_pool.this.id
-  type                = var.dagtype
-  name                = var.dag
-  friendly_name       = var.dag
-  description         = "AVD Desktop application group"
+  type                = var.type
+  friendly_name       = var.name
+  description         = var.description
   tags                = var.tags
 }
 
@@ -34,10 +34,11 @@ resource "azurerm_role_assignment" "role" {
 
 # Create Diagnostic Settings for AVD application group
 resource "azurerm_monitor_diagnostic_setting" "this" {
-  for_each                       = var.diagnostic_settings
-  name                           = each.value.name != null ? each.value.name : "diag-${var.dag}"
-  target_resource_id             = azurerm_virtual_desktop_application_group.dag.id
-  storage_account_id             = each.value.storage_account_resource_id
+  for_each           = var.diagnostic_settings
+  name               = each.value.name != null ? each.value.name : "diag-${var.name}"
+  target_resource_id = azurerm_virtual_desktop_application_group.dag.id
+  storage_account_id = each.value.storage_account_resource_id
+
   eventhub_authorization_rule_id = each.value.event_hub_authorization_rule_resource_id
   eventhub_name                  = each.value.event_hub_name
   partner_solution_id            = each.value.marketplace_partner_resource_id
@@ -72,7 +73,7 @@ resource "azurerm_role_assignment" "this" {
 
 resource "azurerm_management_lock" "this" {
   count      = var.lock.kind != "None" ? 1 : 0
-  name       = coalesce(var.lock.name, "lock-${var.dag}")
+  name       = coalesce(var.lock.name, "lock-${var.name}")
   scope      = azurerm_virtual_desktop_application_group.dag.id
   lock_level = var.lock.kind
 }

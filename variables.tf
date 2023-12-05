@@ -14,18 +14,23 @@ variable "resource_group_name" {
   description = "The resource group where the resources will be deployed."
 }
 
-variable "dag" {
+variable "name" {
   type        = string
   description = "The name of the AVD Application Group."
   validation {
-    condition     = can(regex("^[a-z0-9-]{3,24}$", var.dag))
+    condition     = can(regex("^[a-z0-9-]{3,24}$", var.name))
     error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
   }
 }
 
-variable "dagtype" {
+variable "type" {
   type        = string
   description = "The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'."
+}
+
+variable "description" {
+  type        = string
+  description = "The description of the AVD Application Group."
 }
 
 variable "hostpool" {
