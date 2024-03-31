@@ -26,9 +26,23 @@ data "azurerm_role_definition" "role" {
   name = "Desktop Virtualization User"
 }
 
-data "azuread_group" "user_group" {
+data "azuread_groups" "existing" {
+  count = var.user_group_name == null ? 1 : 0
+
+  display_names = [var.user_group_name]
+}
+
+resource "azuread_group" "new" {
+  count = length(local.existing_group) > 0 ? 0 : 1
+
   display_name     = var.user_group_name
   security_enabled = true
+}
+
+resource "azurerm_role_assignment" "role" {
+  principal_id       = local.group_id
+  scope              = azurerm_virtual_desktop_application_group.dag.id
+  role_definition_id = data.azurerm_role_definition.role.id
 }
 
 resource "azurerm_role_assignment" "role" {
