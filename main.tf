@@ -40,13 +40,7 @@ resource "azuread_group" "new" {
 }
 
 resource "azurerm_role_assignment" "role" {
-  principal_id       = local.group_id
-  scope              = azurerm_virtual_desktop_application_group.dag.id
-  role_definition_id = data.azurerm_role_definition.role.id
-}
-
-resource "azurerm_role_assignment" "role" {
-  principal_id       = data.azuread_group.user_group.id
+  principal_id       = azuread_group.new[0].object_id
   scope              = azurerm_virtual_desktop_application_group.this.id
   role_definition_id = data.azurerm_role_definition.role.id
 }
