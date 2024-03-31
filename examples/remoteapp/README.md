@@ -95,7 +95,7 @@ resource "azurerm_virtual_desktop_application" "edge" {
 
 resource "azurerm_virtual_desktop_application" "wordpad" {
   application_group_id         = module.appgroup.azurerm_virtual_desktop_application_group_id
-  command_line_argument_policy = "DoNotAllow" // Allow, DoNotAllow, Require
+  command_line_argument_policy = "DoNotAllow"
   name                         = "WordPad"
   path                         = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
   description                  = "WordPad application"
