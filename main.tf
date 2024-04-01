@@ -22,27 +22,14 @@ resource "azurerm_virtual_desktop_application_group" "this" {
 }
 
 # Get an existing built-in role definition
-data "azurerm_role_definition" "role" {
+data "azurerm_role_definition" "this" {
   name = "Desktop Virtualization User"
 }
 
+# Get an existing Azure AD group that will be assigned to the application group
 data "azuread_groups" "existing" {
-  count = var.user_group_name == null ? 1 : 0
-
-  display_names = [var.user_group_name]
-}
-
-resource "azuread_group" "new" {
-  count = length(local.existing_group) > 0 ? 0 : 1
-
-  display_name     = var.user_group_name
+  display_names    = [var.user_group_name]
   security_enabled = true
-}
-
-resource "azurerm_role_assignment" "role" {
-  principal_id       = local.group_id
-  scope              = azurerm_virtual_desktop_application_group.this.id
-  role_definition_id = data.azurerm_role_definition.role.id
 }
 
 # Create Diagnostic Settings for AVD application group
@@ -79,9 +66,20 @@ resource "azurerm_role_assignment" "this" {
   condition                              = each.value.condition
   condition_version                      = each.value.condition_version
   delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
+  description                            = each.value.role_assignment_description
+  name                                   = each.value.role_assignment_name
   role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
   role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
   skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
+
+  dynamic "timeouts" {
+    for_each = var.role_assignment_timeouts == null ? [] : [var.role_assignment_timeouts]
+    content {
+      create = timeouts.value.create
+      delete = timeouts.value.delete
+      read   = timeouts.value.read
+    }
+  }
 }
 
 resource "azurerm_management_lock" "this" {
