@@ -20,8 +20,6 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
-- <a name="provider_azuread"></a> [azuread](#provider\_azuread) (>= 2.44.1, < 3.0.0)
-
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.11.1, < 4.0.0)
 
 - <a name="provider_random"></a> [random](#provider\_random) (>= 3.5.1, < 4.0.0)
@@ -30,16 +28,12 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
-- [azuread_group.new](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) (resource)
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_monitor_diagnostic_setting.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
-- [azurerm_role_assignment.role](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [azurerm_virtual_desktop_application_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_application_group) (resource)
 - [random_id.telem](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) (resource)
-- [azuread_groups.existing](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/groups) (data source)
-- [azurerm_role_definition.role](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/role_definition) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -141,6 +135,24 @@ object({
 
 Default: `{}`
 
+### <a name="input_role_assignment_timeouts"></a> [role\_assignment\_timeouts](#input\_role\_assignment\_timeouts)
+
+Description: - `create` - (Defaults to 30 minutes) Used when creating the Role Assignment.
+- `delete` - (Defaults to 30 minutes) Used when deleting the Role Assignment.
+- `read` - (Defaults to 5 minutes) Used when retrieving the Role Assignment.
+
+Type:
+
+```hcl
+object({
+    create = optional(string)
+    delete = optional(string)
+    read   = optional(string)
+  })
+```
+
+Default: `null`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: A map of role assignments to create on the AVD Host Pool. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -151,6 +163,8 @@ Description: A map of role assignments to create on the AVD Host Pool. The map k
 - `skip_service_principal_aad_check` - If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
 - `condition` - The condition which will be used to scope the role assignment.
 - `condition_version` - The version of the condition syntax. Valid values are '2.0'.
+- `role_assignment_description` - (Optional) The description for this Role Assignment. Changing this forces a new resource to be created.
+- `role_assignment_name` - (Optional) A unique UUID/GUID for this Role Assignment
 
 > Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
 
@@ -164,6 +178,8 @@ map(object({
     condition_version                      = string
     skip_service_principal_aad_check       = bool
     delegated_managed_identity_resource_id = string
+    role_assignment_description            = string
+    role_assignment_name                   = string
   }))
 ```
 
