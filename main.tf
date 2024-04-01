@@ -28,8 +28,6 @@ data "azurerm_role_definition" "this" {
 
 # Get an existing Azure AD group that will be assigned to the application group
 data "azuread_groups" "existing" {
-  count = var.user_group_name == null ? 1 : 0
-
   display_names    = [var.user_group_name]
   security_enabled = true
 }
