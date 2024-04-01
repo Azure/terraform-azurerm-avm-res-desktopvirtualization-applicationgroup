@@ -30,38 +30,52 @@ module "naming" {
 
 # This picks a random region from the list of regions.
 resource "random_integer" "region_index" {
-  min = 0
   max = length(local.azure_regions) - 1
+  min = 0
 }
 
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
-  name     = module.naming.resource_group.name_unique
   location = local.azure_regions[random_integer.region_index.result]
+  name     = module.naming.resource_group.name_unique
 }
 
 resource "azurerm_log_analytics_workspace" "this" {
+  location            = azurerm_resource_group.this.location
   name                = module.naming.log_analytics_workspace.name_unique
   resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
 }
 
-# This is the module desktop application group
-module "appgroup" {
-  source              = "../../"
-  enable_telemetry    = var.enable_telemetry
-  type                = var.type
-  name                = var.name
-  description         = var.description
-  hostpool            = var.host_pool
-  user_group_name     = var.user_group_name
-  resource_group_name = var.resource_group_name
+module "avm_res_desktopvirtualization_hostpool" {
+  source                                        = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
+  version                                       = "0.1.3"
+  virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
+  virtual_desktop_host_pool_name                = var.host_pool
+  virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
+  virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
+  virtual_desktop_host_pool_type                = "Pooled"
+  resource_group_name                           = azurerm_resource_group.this.name
   diagnostic_settings = {
     to_law = {
       name                  = "to-law"
       workspace_resource_id = azurerm_log_analytics_workspace.this.id
     }
   }
+}
+
+# This is the module desktop application group
+module "appgroup" {
+  source                                                         = "../../"
+  enable_telemetry                                               = var.enable_telemetry
+  virtual_desktop_application_group_default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
+  virtual_desktop_application_group_description                  = var.virtual_desktop_application_group_description
+  virtual_desktop_application_group_friendly_name                = var.virtual_desktop_application_group_friendly_name
+  virtual_desktop_application_group_host_pool_id                 = module.avm_res_desktopvirtualization_hostpool.azure_virtual_desktop_host_pool_id
+  virtual_desktop_application_group_location                     = azurerm_resource_group.this.location
+  virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
+  virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
+  virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
+  user_group_name                                                = var.user_group_name
 }
 ```
 
@@ -101,14 +115,6 @@ No required inputs.
 
 The following input variables are optional (have default values):
 
-### <a name="input_description"></a> [description](#input\_description)
-
-Description: The description of the AVD Application Group.
-
-Type: `string`
-
-Default: `"AVD Application Group"`
-
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
@@ -127,38 +133,6 @@ Type: `string`
 
 Default: `"avdhostpool"`
 
-### <a name="input_location"></a> [location](#input\_location)
-
-Description: The Azure location where the AVD hostpool resources is deployed.
-
-Type: `string`
-
-Default: `"eastus"`
-
-### <a name="input_name"></a> [name](#input\_name)
-
-Description: The name of the AVD Application Group.
-
-Type: `string`
-
-Default: `"appgroup-1"`
-
-### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
-
-Description: The resource group where the AVD Host Pool is deployed.
-
-Type: `string`
-
-Default: `"rg-avm-test"`
-
-### <a name="input_type"></a> [type](#input\_type)
-
-Description: The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'.
-
-Type: `string`
-
-Default: `"Desktop"`
-
 ### <a name="input_user_group_name"></a> [user\_group\_name](#input\_user\_group\_name)
 
 Description: Microsoft Entra ID User Group for AVD users
@@ -166,6 +140,46 @@ Description: Microsoft Entra ID User Group for AVD users
 Type: `string`
 
 Default: `"avdusersgrp"`
+
+### <a name="input_virtual_desktop_application_group_default_desktop_display_name"></a> [virtual\_desktop\_application\_group\_default\_desktop\_display\_name](#input\_virtual\_desktop\_application\_group\_default\_desktop\_display\_name)
+
+Description: (Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_virtual_desktop_application_group_description"></a> [virtual\_desktop\_application\_group\_description](#input\_virtual\_desktop\_application\_group\_description)
+
+Description: (Optional) Option to set a description for the Virtual Desktop Application Group.
+
+Type: `string`
+
+Default: `"AVD Desktop Application Group"`
+
+### <a name="input_virtual_desktop_application_group_friendly_name"></a> [virtual\_desktop\_application\_group\_friendly\_name](#input\_virtual\_desktop\_application\_group\_friendly\_name)
+
+Description: (Optional) Option to set a friendly name for the Virtual Desktop Application Group.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_virtual_desktop_application_group_name"></a> [virtual\_desktop\_application\_group\_name](#input\_virtual\_desktop\_application\_group\_name)
+
+Description: (Required) The name of the Virtual Desktop Application Group. Changing the name forces a new resource to be created.
+
+Type: `string`
+
+Default: `"vdappgroup"`
+
+### <a name="input_virtual_desktop_application_group_type"></a> [virtual\_desktop\_application\_group\_type](#input\_virtual\_desktop\_application\_group\_type)
+
+Description: (Required) Type of Virtual Desktop Application Group. Valid options are `RemoteApp` or `Desktop` application groups. Changing this forces a new resource to be created.
+
+Type: `string`
+
+Default: `"Desktop"`
 
 ## Outputs
 
@@ -180,6 +194,12 @@ The following Modules are called:
 Source: ../../
 
 Version:
+
+### <a name="module_avm_res_desktopvirtualization_hostpool"></a> [avm\_res\_desktopvirtualization\_hostpool](#module\_avm\_res\_desktopvirtualization\_hostpool)
+
+Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
+
+Version: 0.1.3
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 

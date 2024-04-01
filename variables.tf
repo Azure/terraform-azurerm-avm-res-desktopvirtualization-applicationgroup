@@ -1,52 +1,41 @@
-variable "enable_telemetry" {
-  type        = bool
-  default     = true
-  description = <<DESCRIPTION
-This variable controls whether or not telemetry is enabled for the module.
-For more information see https://aka.ms/avm/telemetryinfo.
-If it is set to false, then no telemetry will be collected.
-DESCRIPTION
-}
-
-# This is required for most resource modules
-variable "resource_group_name" {
-  type        = string
-  description = "The resource group where the resources will be deployed."
-}
-
-variable "name" {
-  type        = string
-  description = "The name of the AVD Application Group."
-  validation {
-    condition     = can(regex("^[a-z0-9-]{3,24}$", var.name))
-    error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
-  }
-}
-
-variable "type" {
-  type        = string
-  description = "The type of the AVD Application Group. Valid values are 'Desktop' and 'RemoteApp'."
-}
-
-variable "description" {
-  type        = string
-  description = "The description of the AVD Application Group."
-}
-
-variable "hostpool" {
-  type        = string
-  description = "The name of the AVD Host Pool to assign the application group to."
-}
-
 variable "user_group_name" {
   type        = string
   description = "Microsoft Entra ID User Group for AVD users"
 }
 
-variable "tags" {
-  type        = map(any)
-  description = "Map of tags to assign to the Key Vault resource."
-  default     = null
+variable "virtual_desktop_application_group_host_pool_id" {
+  type        = string
+  description = "(Required) Resource ID for a Virtual Desktop Host Pool to associate with the Virtual Desktop Application Group. Changing the name forces a new resource to be created."
+  nullable    = false
+}
+
+variable "virtual_desktop_application_group_location" {
+  type        = string
+  description = "(Required) The location/region where the Virtual Desktop Application Group is located. Changing this forces a new resource to be created."
+  nullable    = false
+}
+
+variable "virtual_desktop_application_group_name" {
+  type        = string
+  description = "(Required) The name of the Virtual Desktop Application Group. Changing the name forces a new resource to be created."
+  nullable    = false
+
+  validation {
+    condition     = can(regex("^[a-z0-9-]{3,24}$", var.virtual_desktop_application_group_name))
+    error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
+  }
+}
+
+variable "virtual_desktop_application_group_resource_group_name" {
+  type        = string
+  description = "(Required) The name of the resource group in which to create the Virtual Desktop Application Group. Changing this forces a new resource to be created."
+  nullable    = false
+}
+
+variable "virtual_desktop_application_group_type" {
+  type        = string
+  description = "(Required) Type of Virtual Desktop Application Group. Valid options are `RemoteApp` or `Desktop` application groups. Changing this forces a new resource to be created."
+  nullable    = false
 }
 
 variable "diagnostic_settings" {
@@ -60,18 +49,7 @@ variable "diagnostic_settings" {
     event_hub_name                           = optional(string, null)
     marketplace_partner_resource_id          = optional(string, null)
   }))
-  default  = {}
-  nullable = false
-
-  validation {
-    condition = alltrue(
-      [
-        for _, v in var.diagnostic_settings :
-        v.workspace_resource_id != null || v.storage_account_resource_id != null || v.event_hub_authorization_rule_resource_id != null || v.marketplace_partner_resource_id != null
-      ]
-    )
-    error_message = "At least one of `workspace_resource_id`, `storage_account_resource_id`, `marketplace_partner_resource_id`, or `event_hub_authorization_rule_resource_id`, must be set."
-  }
+  default     = {}
   description = <<DESCRIPTION
 A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
@@ -84,22 +62,27 @@ A map of diagnostic settings to create on the Key Vault. The map key is delibera
 - `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.
 - `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs.
 DESCRIPTION
+  nullable    = false
+
+  validation {
+    condition = alltrue(
+      [
+        for _, v in var.diagnostic_settings :
+        v.workspace_resource_id != null || v.storage_account_resource_id != null || v.event_hub_authorization_rule_resource_id != null || v.marketplace_partner_resource_id != null
+      ]
+    )
+    error_message = "At least one of `workspace_resource_id`, `storage_account_resource_id`, `marketplace_partner_resource_id`, or `event_hub_authorization_rule_resource_id`, must be set."
+  }
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "tracing_tags_enabled" {
+variable "enable_telemetry" {
   type        = bool
-  default     = false
-  description = "Whether enable tracing tags that generated by BridgeCrew Yor."
-  nullable    = false
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "tracing_tags_prefix" {
-  type        = string
-  default     = "avm_"
-  description = "Default prefix for generated tracing tags"
-  nullable    = false
+  default     = true
+  description = <<DESCRIPTION
+This variable controls whether or not telemetry is enabled for the module.
+For more information see https://aka.ms/avm/telemetryinfo.
+If it is set to false, then no telemetry will be collected.
+DESCRIPTION
 }
 
 variable "lock" {
@@ -107,9 +90,10 @@ variable "lock" {
     name = optional(string, null)
     kind = optional(string, "None")
   })
-  description = "The lock level to apply to the AVD Host Pool. Default is `ReadOnly`. Possible values are`Delete`, and `ReadOnly`."
   default     = {}
+  description = "The lock level to apply to the AVD Host Pool. Default is `ReadOnly`. Possible values are`Delete`, and `ReadOnly`."
   nullable    = false
+
   validation {
     condition     = contains(["None", "Delete", "ReadOnly"], var.lock.kind)
     error_message = "The lock level must be one of: 'Delete', or 'ReadOnly'."
@@ -138,4 +122,66 @@ A map of role assignments to create on the AVD Host Pool. The map key is deliber
 
 > Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
 DESCRIPTION
+}
+
+variable "tags" {
+  type        = map(any)
+  default     = null
+  description = "Map of tags to assign to the Key Vault resource."
+}
+
+# tflint-ignore: terraform_unused_declarations
+variable "tracing_tags_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether enable tracing tags that generated by BridgeCrew Yor."
+  nullable    = false
+}
+
+# tflint-ignore: terraform_unused_declarations
+variable "tracing_tags_prefix" {
+  type        = string
+  default     = "avm_"
+  description = "Default prefix for generated tracing tags"
+  nullable    = false
+}
+
+variable "virtual_desktop_application_group_default_desktop_display_name" {
+  type        = string
+  default     = null
+  description = "(Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`."
+}
+
+variable "virtual_desktop_application_group_description" {
+  type        = string
+  default     = null
+  description = "(Optional) Option to set a description for the Virtual Desktop Application Group."
+}
+
+variable "virtual_desktop_application_group_friendly_name" {
+  type        = string
+  default     = null
+  description = "(Optional) Option to set a friendly name for the Virtual Desktop Application Group."
+}
+
+variable "virtual_desktop_application_group_tags" {
+  type        = map(string)
+  default     = null
+  description = "(Optional) A mapping of tags to assign to the resource."
+}
+
+variable "virtual_desktop_application_group_timeouts" {
+  type = object({
+    create = optional(string)
+    delete = optional(string)
+    read   = optional(string)
+    update = optional(string)
+  })
+  default     = null
+  description = <<-EOT
+ - `create` - (Defaults to 60 minutes) Used when creating the Virtual Desktop Application Group.
+ - `delete` - (Defaults to 60 minutes) Used when deleting the Virtual Desktop Application Group.
+ - `read` - (Defaults to 5 minutes) Used when retrieving the Virtual Desktop Application Group.
+ - `update` - (Defaults to 60 minutes) Used when updating the Virtual Desktop Application Group.
+EOT
 }

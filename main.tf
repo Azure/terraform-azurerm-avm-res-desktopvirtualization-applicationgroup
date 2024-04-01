@@ -1,19 +1,24 @@
-# Get the Azure Virtual Desktop host pool
-data "azurerm_virtual_desktop_host_pool" "this" {
-  name                = var.hostpool
-  resource_group_name = var.resource_group_name
-}
+# Create Azure Virtual Desktop application group
+resource "azurerm_virtual_desktop_application_group" "this" {
+  host_pool_id                 = var.virtual_desktop_application_group_host_pool_id
+  location                     = var.virtual_desktop_application_group_location
+  name                         = var.virtual_desktop_application_group_name
+  resource_group_name          = var.virtual_desktop_application_group_resource_group_name
+  type                         = var.virtual_desktop_application_group_type
+  default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
+  description                  = var.virtual_desktop_application_group_description
+  friendly_name                = var.virtual_desktop_application_group_friendly_name
+  tags                         = var.virtual_desktop_application_group_tags
 
-# Create Azure Virtual Desktop application grop
-resource "azurerm_virtual_desktop_application_group" "dag" {
-  name                = var.name
-  location            = data.azurerm_virtual_desktop_host_pool.this.location
-  resource_group_name = var.resource_group_name
-  host_pool_id        = data.azurerm_virtual_desktop_host_pool.this.id
-  type                = var.type
-  friendly_name       = var.name
-  description         = var.description
-  tags                = var.tags
+  dynamic "timeouts" {
+    for_each = var.virtual_desktop_application_group_timeouts == null ? [] : [var.virtual_desktop_application_group_timeouts]
+    content {
+      create = timeouts.value.create
+      delete = timeouts.value.delete
+      read   = timeouts.value.read
+      update = timeouts.value.update
+    }
+  }
 }
 
 # Get an existing built-in role definition
@@ -21,28 +26,36 @@ data "azurerm_role_definition" "role" {
   name = "Desktop Virtualization User"
 }
 
-data "azuread_group" "user_group" {
+data "azuread_groups" "existing" {
+  count = var.user_group_name == null ? 1 : 0
+
+  display_names = [var.user_group_name]
+}
+
+resource "azuread_group" "new" {
+  count = length(local.existing_group) > 0 ? 0 : 1
+
   display_name     = var.user_group_name
   security_enabled = true
 }
 
 resource "azurerm_role_assignment" "role" {
-  scope              = azurerm_virtual_desktop_application_group.dag.id
+  principal_id       = local.group_id
+  scope              = azurerm_virtual_desktop_application_group.this.id
   role_definition_id = data.azurerm_role_definition.role.id
-  principal_id       = data.azuread_group.user_group.id
 }
 
 # Create Diagnostic Settings for AVD application group
 resource "azurerm_monitor_diagnostic_setting" "this" {
-  for_each           = var.diagnostic_settings
-  name               = each.value.name != null ? each.value.name : "diag-${var.name}"
-  target_resource_id = azurerm_virtual_desktop_application_group.dag.id
-  storage_account_id = each.value.storage_account_resource_id
+  for_each = var.diagnostic_settings
 
+  name                           = each.value.name != null ? each.value.name : "diag-${var.virtual_desktop_application_group_name}"
+  target_resource_id             = azurerm_virtual_desktop_application_group.this.id
   eventhub_authorization_rule_id = each.value.event_hub_authorization_rule_resource_id
   eventhub_name                  = each.value.event_hub_name
-  partner_solution_id            = each.value.marketplace_partner_resource_id
   log_analytics_workspace_id     = each.value.workspace_resource_id
+  partner_solution_id            = each.value.marketplace_partner_resource_id
+  storage_account_id             = each.value.storage_account_resource_id
 
   dynamic "enabled_log" {
     for_each = each.value.log_categories
@@ -50,7 +63,6 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
       category = enabled_log.value
     }
   }
-
   dynamic "enabled_log" {
     for_each = each.value.log_groups
     content {
@@ -60,20 +72,22 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 }
 
 resource "azurerm_role_assignment" "this" {
-  for_each                               = var.role_assignments
-  scope                                  = azurerm_virtual_desktop_application_group.dag.id
-  role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
-  role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
+  for_each = var.role_assignments
+
   principal_id                           = each.value.principal_id
+  scope                                  = azurerm_virtual_desktop_application_group.this.id
   condition                              = each.value.condition
   condition_version                      = each.value.condition_version
-  skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
   delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
+  role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
+  role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
+  skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
 }
 
 resource "azurerm_management_lock" "this" {
-  count      = var.lock.kind != "None" ? 1 : 0
-  name       = coalesce(var.lock.name, "lock-${var.name}")
-  scope      = azurerm_virtual_desktop_application_group.dag.id
+  count = var.lock.kind != "None" ? 1 : 0
+
   lock_level = var.lock.kind
+  name       = coalesce(var.lock.name, "lock-${var.virtual_desktop_application_group_name}")
+  scope      = azurerm_virtual_desktop_application_group.this.id
 }
