@@ -38,7 +38,6 @@ variable "virtual_desktop_application_group_type" {
   nullable    = false
 }
 
-
 variable "diagnostic_settings" {
   type = map(object({
     name                                     = optional(string, null)
