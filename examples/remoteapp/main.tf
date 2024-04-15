@@ -64,7 +64,7 @@ module "appgroup" {
   virtual_desktop_application_group_default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
   virtual_desktop_application_group_description                  = var.virtual_desktop_application_group_description
   virtual_desktop_application_group_friendly_name                = var.virtual_desktop_application_group_friendly_name
-  virtual_desktop_application_group_host_pool_id                 = module.avm_res_desktopvirtualization_hostpool.azure_virtual_desktop_host_pool_id
+  virtual_desktop_application_group_host_pool_id                 = module.avm_res_desktopvirtualization_hostpool.resource.id
   virtual_desktop_application_group_location                     = azurerm_resource_group.this.location
   virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
   virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
@@ -75,7 +75,7 @@ module "appgroup" {
 # Sample applications
 # Virtual desktop application name must be 1 - 260 characters long, contain only letters, numbers and hyphens.
 resource "azurerm_virtual_desktop_application" "edge" {
-  application_group_id         = module.appgroup.azurerm_virtual_desktop_application_group_id
+  application_group_id         = module.appgroup.resource.id
   command_line_argument_policy = "DoNotAllow"
   name                         = "MicrosoftEdge"
   path                         = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
@@ -88,7 +88,7 @@ resource "azurerm_virtual_desktop_application" "edge" {
 }
 
 resource "azurerm_virtual_desktop_application" "wordpad" {
-  application_group_id         = module.appgroup.azurerm_virtual_desktop_application_group_id
+  application_group_id         = module.appgroup.resource.id
   command_line_argument_policy = "DoNotAllow"
   name                         = "WordPad"
   path                         = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
