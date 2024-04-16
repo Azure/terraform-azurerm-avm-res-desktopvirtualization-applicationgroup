@@ -21,15 +21,17 @@ resource "azurerm_virtual_desktop_application_group" "this" {
   }
 }
 
-# Get an existing built-in role definition
-data "azurerm_role_definition" "this" {
-  name = "Desktop Virtualization User"
-}
+resource "azurerm_role_assignment" "this" {
+  for_each = var.role_assignments
 
-# Get an existing Azure AD group that will be assigned to the application group
-data "azuread_groups" "existing" {
-  display_names    = [var.user_group_name]
-  security_enabled = true
+  principal_id                           = each.value.principal_id
+  scope                                  = azurerm_virtual_desktop_application_group.this.id
+  condition                              = each.value.condition
+  condition_version                      = each.value.condition_version
+  delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
+  role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
+  role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
+  skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
 }
 
 # Create Diagnostic Settings for AVD application group
@@ -56,36 +58,4 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
       category_group = enabled_log.value
     }
   }
-}
-
-resource "azurerm_role_assignment" "this" {
-  for_each = var.role_assignments
-
-  principal_id                           = each.value.principal_id
-  scope                                  = azurerm_virtual_desktop_application_group.this.id
-  condition                              = each.value.condition
-  condition_version                      = each.value.condition_version
-  delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
-  description                            = each.value.role_assignment_description
-  name                                   = each.value.role_assignment_name
-  role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
-  role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
-  skip_service_principal_aad_check       = each.value.skip_service_principal_aad_check
-
-  dynamic "timeouts" {
-    for_each = var.role_assignment_timeouts == null ? [] : [var.role_assignment_timeouts]
-    content {
-      create = timeouts.value.create
-      delete = timeouts.value.delete
-      read   = timeouts.value.read
-    }
-  }
-}
-
-resource "azurerm_management_lock" "this" {
-  count = var.lock.kind != "None" ? 1 : 0
-
-  lock_level = var.lock.kind
-  name       = coalesce(var.lock.name, "lock-${var.virtual_desktop_application_group_name}")
-  scope      = azurerm_virtual_desktop_application_group.this.id
 }
