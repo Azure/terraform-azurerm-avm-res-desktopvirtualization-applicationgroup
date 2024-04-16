@@ -63,6 +63,25 @@ module "avm_res_desktopvirtualization_hostpool" {
   }
 }
 
+# Get an existing built-in role definition
+data "azurerm_role_definition" "this" {
+  name = "Desktop Virtualization User"
+}
+
+# Get an existing Azure AD group that will be assigned to the application group
+data "azuread_group" "existing" {
+  display_name     = var.user_group_name
+  security_enabled = true
+}
+
+# Assign the Azure AD group to the application group
+resource "azurerm_role_assignment" "this" {
+  principal_id                     = data.azuread_group.existing.object_id
+  scope                            = module.appgroup.resource.id
+  role_definition_id               = data.azurerm_role_definition.this.id
+  skip_service_principal_aad_check = false
+}
+
 # This is the module desktop application group
 module "appgroup" {
   source                                                         = "../../"
@@ -94,6 +113,8 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
+- <a name="provider_azuread"></a> [azuread](#provider\_azuread)
+
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.7.0, < 4.0.0)
 
 - <a name="provider_random"></a> [random](#provider\_random) (>= 3.5.0, < 4.0.0)
@@ -104,7 +125,10 @@ The following resources are used by this module:
 
 - [azurerm_log_analytics_workspace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
+- [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azuread_group.existing](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/group) (data source)
+- [azurerm_role_definition.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/role_definition) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs

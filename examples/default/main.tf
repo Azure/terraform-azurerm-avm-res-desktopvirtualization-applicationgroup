@@ -57,6 +57,25 @@ module "avm_res_desktopvirtualization_hostpool" {
   }
 }
 
+# Get an existing built-in role definition
+data "azurerm_role_definition" "this" {
+  name = "Desktop Virtualization User"
+}
+
+# Get an existing Azure AD group that will be assigned to the application group
+data "azuread_group" "existing" {
+  display_name     = var.user_group_name
+  security_enabled = true
+}
+
+# Assign the Azure AD group to the application group
+resource "azurerm_role_assignment" "this" {
+  principal_id                     = data.azuread_group.existing.object_id
+  scope                            = module.appgroup.resource.id
+  role_definition_id               = data.azurerm_role_definition.this.id
+  skip_service_principal_aad_check = false
+}
+
 # This is the module desktop application group
 module "appgroup" {
   source                                                         = "../../"
