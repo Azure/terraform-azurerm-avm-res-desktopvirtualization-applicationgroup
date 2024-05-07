@@ -16,7 +16,7 @@ variable "host_pool" {
 
 variable "user_group_name" {
   type        = string
-  default     = "avdusersgrp"
+  default     = "avdgroup" # this should be replaced with your group. This is a sample group that is not supported.
   description = "Microsoft Entra ID User Group for AVD users"
 }
 
