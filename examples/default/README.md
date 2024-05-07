@@ -129,6 +129,7 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azuread_group.new](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) (resource)
 - [azurerm_log_analytics_workspace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)

@@ -65,6 +65,7 @@ data "azurerm_role_definition" "this" {
 
 # This sample will create the group defined in the variable user_group_nam. It allows the code to deploy for an end to end to deployment however this is not a supported scenario and expects you to have the user group already synchcronized in Microsoft Entra ID per https://learn.microsoft.com/en-us/azure/virtual-desktop/prerequisites?tabs=portal#users
 # You should replace this with your own code to a data block to fetch the group in your own environment.
+
 data "azuread_group" "existing" {
   display_name     = var.user_group_name
   security_enabled = true
