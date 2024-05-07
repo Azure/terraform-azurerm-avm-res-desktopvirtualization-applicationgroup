@@ -201,7 +201,7 @@ Description: Microsoft Entra ID User Group for AVD users
 
 Type: `string`
 
-Default: `"avdusersgrp"`
+Default: `"avdgroup"`
 
 ### <a name="input_virtual_desktop_application_group_default_desktop_display_name"></a> [virtual\_desktop\_application\_group\_default\_desktop\_display\_name](#input\_virtual\_desktop\_application\_group\_default\_desktop\_display\_name)
 
