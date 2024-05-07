@@ -3,6 +3,10 @@
 
 This deploys the module for Desktop Application Group with the remoteapp type with 2 sample applications.
 
+This sample will create the group to allow the code to deploy for an end to end to deployment however this is not a supported scenario and expects you to have the user group already synchcronized in Microsoft Entra ID per https://learn.microsoft.com/en-us/azure/virtual-desktop/prerequisites?tabs=portal#users
+
+Variables file had default values that you should change for your environment.
+
 ```hcl
 terraform {
   required_version = ">= 1.0.0"
@@ -71,16 +75,16 @@ module "avm_res_desktopvirtualization_hostpool" {
 data "azurerm_role_definition" "this" {
   name = "Desktop Virtualization User"
 }
-
-# Get an existing Azure AD group that will be assigned to the application group
-data "azuread_group" "existing" {
+# This sample will create the group defined in the variable user_group_nam. It allows the code to deploy for an end to end to deployment however this is not a supported scenario and expects you to have the user group already synchcronized in Microsoft Entra ID per https://learn.microsoft.com/en-us/azure/virtual-desktop/prerequisites?tabs=portal#users
+# You should replace this with your own code to a data block to fetch the group in your own environment.
+resource "azuread_group" "new" {
   display_name     = var.user_group_name
   security_enabled = true
 }
 
 # Assign the Azure AD group to the application group
 resource "azurerm_role_assignment" "this" {
-  principal_id                     = data.azuread_group.existing.object_id
+  principal_id                     = azuread_group.new.id
   scope                            = module.appgroup.resource.id
   role_definition_id               = data.azurerm_role_definition.this.id
   skip_service_principal_aad_check = false
@@ -155,13 +159,13 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azuread_group.new](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) (resource)
 - [azurerm_log_analytics_workspace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [azurerm_virtual_desktop_application.edge](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_application) (resource)
 - [azurerm_virtual_desktop_application.wordpad](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_application) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
-- [azuread_group.existing](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/group) (data source)
 - [azurerm_role_definition.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/role_definition) (data source)
 
 <!-- markdownlint-disable MD013 -->
