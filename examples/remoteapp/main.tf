@@ -1,10 +1,6 @@
 terraform {
   required_version = ">= 1.0.0"
   required_providers {
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = ">= 2.44.1, < 3.0.0"
-    }
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.7.0, < 4.0.0"
@@ -61,6 +57,7 @@ module "avm_res_desktopvirtualization_hostpool" {
   }
 }
 
+/*
 # Get an existing built-in role definition
 data "azurerm_role_definition" "this" {
   name = "Desktop Virtualization User"
@@ -79,6 +76,7 @@ resource "azurerm_role_assignment" "this" {
   role_definition_id               = data.azurerm_role_definition.this.id
   skip_service_principal_aad_check = false
 }
+*/
 
 # This is the module desktop application group
 module "appgroup" {
