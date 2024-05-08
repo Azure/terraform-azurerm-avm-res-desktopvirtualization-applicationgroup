@@ -12,10 +12,6 @@ Change default values in the variables.tf file for your environment.
 terraform {
   required_version = ">= 1.0.0"
   required_providers {
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = ">= 2.44.1, < 3.0.0"
-    }
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.7.0, < 4.0.0"
@@ -141,8 +137,6 @@ resource "azurerm_virtual_desktop_application" "wordpad" {
 The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.0.0)
-
-- <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) (>= 2.44.1, < 3.0.0)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.7.0, < 4.0.0)
 
