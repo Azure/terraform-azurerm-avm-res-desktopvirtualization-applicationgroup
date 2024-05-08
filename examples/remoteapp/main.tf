@@ -61,6 +61,7 @@ module "avm_res_desktopvirtualization_hostpool" {
   }
 }
 
+/*
 # Get an existing built-in role definition
 data "azurerm_role_definition" "this" {
   name = "Desktop Virtualization User"
@@ -79,6 +80,7 @@ resource "azurerm_role_assignment" "this" {
   role_definition_id               = data.azurerm_role_definition.this.id
   skip_service_principal_aad_check = false
 }
+*/
 
 # This is the module desktop application group
 module "appgroup" {
