@@ -76,6 +76,7 @@ data "azurerm_role_definition" "this" {
 
 # This sample will create the group defined in the variable user_group_nam. It allows the code to deploy for an end to end to deployment however this is not a supported scenario and expects you to have the user group already synchcronized in Microsoft Entra ID per https://learn.microsoft.com/en-us/azure/virtual-desktop/prerequisites?tabs=portal#users
 # You should replace this with your own code to a data block to fetch the group in your own environment.
+
 data "azuread_group" "existing" {
   display_name     = var.user_group_name
   security_enabled = true
@@ -129,7 +130,6 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
-- [azuread_group.new](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) (resource)
 - [azurerm_log_analytics_workspace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
