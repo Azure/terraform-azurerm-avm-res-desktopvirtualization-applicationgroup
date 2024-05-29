@@ -1,8 +1,3 @@
-variable "user_group_name" {
-  type        = string
-  description = "Microsoft Entra ID User Group for AVD users"
-}
-
 variable "virtual_desktop_application_group_host_pool_id" {
   type        = string
   description = "(Required) Resource ID for a Virtual Desktop Host Pool to associate with the Virtual Desktop Application Group. Changing the name forces a new resource to be created."
