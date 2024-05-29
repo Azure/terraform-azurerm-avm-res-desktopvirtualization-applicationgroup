@@ -14,12 +14,6 @@ variable "host_pool" {
   description = "The name of the AVD Host Pool to assign the application group to."
 }
 
-variable "user_group_name" {
-  type        = string
-  default     = "avdgroup" # this should be replaced with your group. This is a sample group that is not supported.
-  description = "Microsoft Entra ID User Group for AVD users"
-}
-
 variable "virtual_desktop_application_group_default_desktop_display_name" {
   type        = string
   default     = null
