@@ -82,6 +82,7 @@ data "azuread_group" "existing" {
   security_enabled = true
 }
 
+
 # Assign the Azure AD group to the application group
 resource "azurerm_role_assignment" "this" {
   principal_id                     = data.azuread_group.existing.id
@@ -103,7 +104,6 @@ module "appgroup" {
   virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
   virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
   virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
-  user_group_name                                                = var.user_group_name
 }
 ```
 
@@ -160,14 +160,6 @@ Description: The name of the AVD Host Pool to assign the application group to.
 Type: `string`
 
 Default: `"avdhostpool"`
-
-### <a name="input_user_group_name"></a> [user\_group\_name](#input\_user\_group\_name)
-
-Description: Microsoft Entra ID User Group for AVD users
-
-Type: `string`
-
-Default: `"avdgroup"`
 
 ### <a name="input_virtual_desktop_application_group_default_desktop_display_name"></a> [virtual\_desktop\_application\_group\_default\_desktop\_display\_name](#input\_virtual\_desktop\_application\_group\_default\_desktop\_display\_name)
 
