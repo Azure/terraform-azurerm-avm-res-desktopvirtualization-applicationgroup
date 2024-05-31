@@ -111,15 +111,15 @@ variable "role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string
     principal_id                           = string
-    description                            = string
-    skip_service_principal_aad_check       = bool
-    condition                              = string
-    condition_version                      = string
-    delegated_managed_identity_resource_id = string
+    description                            = optional(string, null)
+    skip_service_principal_aad_check       = optional(bool, false)
+    condition                              = optional(string, null)
+    condition_version                      = optional(string, null)
+    delegated_managed_identity_resource_id = optional(string, null)
   }))
   default     = {}
   description = <<DESCRIPTION
-  A map of role assignments to create on the resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+  A map of role assignments to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
   
   - `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
   - `principal_id` - The ID of the principal to assign the role to.
