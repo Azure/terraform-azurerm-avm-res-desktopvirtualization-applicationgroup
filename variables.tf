@@ -107,20 +107,6 @@ variable "lock" {
   }
 }
 
-variable "role_assignment_timeouts" {
-  type = object({
-    create = optional(string)
-    delete = optional(string)
-    read   = optional(string)
-  })
-  default     = null
-  description = <<-EOT
- - `create` - (Defaults to 30 minutes) Used when creating the Role Assignment.
- - `delete` - (Defaults to 30 minutes) Used when deleting the Role Assignment.
- - `read` - (Defaults to 5 minutes) Used when retrieving the Role Assignment.
-EOT
-}
-
 variable "role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string

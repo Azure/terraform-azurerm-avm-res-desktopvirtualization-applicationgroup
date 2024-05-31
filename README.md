@@ -137,24 +137,6 @@ object({
 
 Default: `null`
 
-### <a name="input_role_assignment_timeouts"></a> [role\_assignment\_timeouts](#input\_role\_assignment\_timeouts)
-
-Description: - `create` - (Defaults to 30 minutes) Used when creating the Role Assignment.
-- `delete` - (Defaults to 30 minutes) Used when deleting the Role Assignment.
-- `read` - (Defaults to 5 minutes) Used when retrieving the Role Assignment.
-
-Type:
-
-```hcl
-object({
-    create = optional(string)
-    delete = optional(string)
-    read   = optional(string)
-  })
-```
-
-Default: `null`
-
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description:   A map of role assignments to create on the resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
