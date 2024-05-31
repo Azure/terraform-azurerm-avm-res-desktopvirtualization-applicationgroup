@@ -90,7 +90,6 @@ module "appgroup" {
   virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
   virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
   virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
-  user_group_name                                                = var.user_group_name
 }
 
 # Sample applications

@@ -29,6 +29,7 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_monitor_diagnostic_setting.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
 - [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
@@ -39,12 +40,6 @@ The following resources are used by this module:
 ## Required Inputs
 
 The following input variables are required:
-
-### <a name="input_user_group_name"></a> [user\_group\_name](#input\_user\_group\_name)
-
-Description: Microsoft Entra ID User Group for AVD users
-
-Type: `string`
 
 ### <a name="input_virtual_desktop_application_group_host_pool_id"></a> [virtual\_desktop\_application\_group\_host\_pool\_id](#input\_virtual\_desktop\_application\_group\_host\_pool\_id)
 
@@ -142,36 +137,20 @@ object({
 
 Default: `null`
 
-### <a name="input_role_assignment_timeouts"></a> [role\_assignment\_timeouts](#input\_role\_assignment\_timeouts)
-
-Description: - `create` - (Defaults to 30 minutes) Used when creating the Role Assignment.
-- `delete` - (Defaults to 30 minutes) Used when deleting the Role Assignment.
-- `read` - (Defaults to 5 minutes) Used when retrieving the Role Assignment.
-
-Type:
-
-```hcl
-object({
-    create = optional(string)
-    delete = optional(string)
-    read   = optional(string)
-  })
-```
-
-Default: `null`
-
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
-Description:   A map of role assignments to create on the resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+Description: A map of role assignments to create on the <RESOURCE>. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
-  - `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
-  - `principal_id` - The ID of the principal to assign the role to.
-  - `description` - The description of the role assignment.
-  - `skip_service_principal_aad_check` - If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
-  - `condition` - The condition which will be used to scope the role assignment.
-  - `condition_version` - The version of the condition syntax. Leave as `null` if you are not using a condition, if you are then valid values are '2.0'.
+- `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
+- `principal_id` - The ID of the principal to assign the role to.
+- `description` - (Optional) The description of the role assignment.
+- `skip_service_principal_aad_check` - (Optional) If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
+- `condition` - (Optional) The condition which will be used to scope the role assignment.
+- `condition_version` - (Optional) The version of the condition syntax. Leave as `null` if you are not using a condition, if you are then valid values are '2.0'.
+- `delegated_managed_identity_resource_id` - (Optional) The delegated Azure Resource Id which contains a Managed Identity. Changing this forces a new resource to be created. This field is only used in cross-tenant scenario.
+- `principal_type` - (Optional) The type of the `principal_id`. Possible values are `User`, `Group` and `ServicePrincipal`. It is necessary to explicitly set this attribute when creating role assignments if the principal creating the assignment is constrained by ABAC rules that filters on the PrincipalType attribute.
 
-  > Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
+> Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
 
 Type:
 
@@ -184,6 +163,7 @@ map(object({
     condition                              = optional(string, null)
     condition_version                      = optional(string, null)
     delegated_managed_identity_resource_id = optional(string, null)
+    principal_type                         = optional(string, null)
   }))
 ```
 
@@ -272,6 +252,10 @@ The following outputs are exported:
 ### <a name="output_resource"></a> [resource](#output\_resource)
 
 Description: This output is the full output for the resource to allow flexibility to reference all possible values for the resource. Example usage: module.<modulename>.resource.id
+
+### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
+
+Description: The ID of the Azure Virtual Desktop application group
 
 ## Modules
 
