@@ -4,6 +4,6 @@ output "resource" {
 }
 
 output "resource_id" {
-  value       = azurerm_virtual_desktop_application_group.this.id
   description = "The ID of the Azure Virtual Desktop application group"
+  value       = azurerm_virtual_desktop_application_group.this.id
 }
