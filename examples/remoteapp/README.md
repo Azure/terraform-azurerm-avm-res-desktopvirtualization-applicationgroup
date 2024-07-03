@@ -10,7 +10,7 @@ Change default values in the variables.tf file for your environment.
 
 ```hcl
 terraform {
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.6.6, < 2.0.0"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -53,7 +53,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source                                        = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version                                       = "0.1.5"
+  version                                       = "0.2.0"
   virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
   virtual_desktop_host_pool_name                = var.host_pool
   virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
@@ -135,7 +135,7 @@ resource "azurerm_virtual_desktop_application" "wordpad" {
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.0.0)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.6.6, < 2.0.0)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.7.0, < 4.0.0)
 
@@ -244,7 +244,7 @@ Version:
 
 Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
 
-Version: 0.1.5
+Version: 0.2.0
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
