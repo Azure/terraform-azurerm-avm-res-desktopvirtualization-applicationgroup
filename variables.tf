@@ -16,8 +16,8 @@ variable "virtual_desktop_application_group_name" {
   nullable    = false
 
   validation {
-    condition     = can(regex("^[a-z0-9-]{3,24}$", var.virtual_desktop_application_group_name))
-    error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
+    condition     = can(regex("^[a-z0-9-]{3,64}$", var.virtual_desktop_application_group_name))
+    error_message = "The name must be between 3 and 64 characters long and can only contain Alphanumerics, underscores, periods, and hyphens. Start with letter or number. End with letter, number, or underscore."
   }
 }
 
