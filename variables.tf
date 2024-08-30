@@ -156,6 +156,11 @@ variable "virtual_desktop_application_group_default_desktop_display_name" {
   type        = string
   default     = null
   description = "(Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`."
+
+  validation {
+    condition     = var.virtual_desktop_application_group_type != "Desktop" || var.virtual_desktop_application_group_default_desktop_display_name != null
+    error_message = "The display name for the default sessionDesktop desktop must be set when `type` is `Desktop`."
+  }
 }
 
 variable "virtual_desktop_application_group_description" {
