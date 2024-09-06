@@ -12,6 +12,7 @@ resource "azurerm_virtual_desktop_application_group" "this" {
 
   dynamic "timeouts" {
     for_each = var.virtual_desktop_application_group_timeouts == null ? [] : [var.virtual_desktop_application_group_timeouts]
+
     content {
       create = timeouts.value.create
       delete = timeouts.value.delete
@@ -57,12 +58,14 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 
   dynamic "enabled_log" {
     for_each = each.value.log_categories
+
     content {
       category = enabled_log.value
     }
   }
   dynamic "enabled_log" {
     for_each = each.value.log_groups
+
     content {
       category_group = enabled_log.value
     }

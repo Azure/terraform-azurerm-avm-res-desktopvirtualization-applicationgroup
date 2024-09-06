@@ -10,14 +10,14 @@ DESCRIPTION
 
 variable "host_pool" {
   type        = string
-  default     = "avdhostpool"
+  default     = "vdhostpool"
   description = "The name of the AVD Host Pool to assign the application group to."
 }
 
 variable "virtual_desktop_application_group_default_desktop_display_name" {
   type        = string
   default     = null
-  description = "(Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`."
+  description = "(Optional) Option to set the display name for the default desktop application. Changing this forces a new resource to be created."
 }
 
 variable "virtual_desktop_application_group_description" {
@@ -34,13 +34,8 @@ variable "virtual_desktop_application_group_friendly_name" {
 
 variable "virtual_desktop_application_group_name" {
   type        = string
-  default     = "vdappgroup"
+  default     = "VdappGroup"
   description = "(Required) The name of the Virtual Desktop Application Group. Changing the name forces a new resource to be created."
-
-  validation {
-    condition     = can(regex("^[a-z0-9-]{3,24}$", var.virtual_desktop_application_group_name))
-    error_message = "The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes."
-  }
 }
 
 variable "virtual_desktop_application_group_type" {
