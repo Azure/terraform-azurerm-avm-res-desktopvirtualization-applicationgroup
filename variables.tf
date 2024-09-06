@@ -16,8 +16,8 @@ variable "virtual_desktop_application_group_name" {
   nullable    = false
 
   validation {
-    condition     = can(regex("^[a-z0-9-]{3,64}$", var.virtual_desktop_application_group_name))
-    error_message = "The name must be between 3 and 64 characters long and can only contain Alphanumerics, underscores, periods, and hyphens. Start with letter or number. End with letter, number, or underscore."
+    condition     = can(regex("^[a-zA-Z0-9][a-zA-Z0-9._-]{1,62}[a-zA-Z0-9_]$", var.virtual_desktop_application_group_name))
+    error_message = "The name must be between 3 and 64 characters long and can only contain alphanumerics, underscores, periods, and hyphens. It must start with a letter or number and end with a letter, number, or underscore."
   }
 }
 
@@ -155,12 +155,7 @@ variable "tracing_tags_prefix" {
 variable "virtual_desktop_application_group_default_desktop_display_name" {
   type        = string
   default     = null
-  description = "(Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`."
-
-  validation {
-    condition     = var.virtual_desktop_application_group_type != "Desktop" || var.virtual_desktop_application_group_default_desktop_display_name != null
-    error_message = "The display name for the default sessionDesktop desktop must be set when `type` is `Desktop`."
-  }
+  description = "(Optional) Option to set the display name for the default desktop application. Changing this forces a new resource to be created."
 }
 
 variable "virtual_desktop_application_group_description" {

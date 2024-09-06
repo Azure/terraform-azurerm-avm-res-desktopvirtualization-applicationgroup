@@ -183,7 +183,7 @@ Default: `"avm_"`
 
 ### <a name="input_virtual_desktop_application_group_default_desktop_display_name"></a> [virtual\_desktop\_application\_group\_default\_desktop\_display\_name](#input\_virtual\_desktop\_application\_group\_default\_desktop\_display\_name)
 
-Description: (Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`.
+Description: (Optional) Option to set the display name for the default desktop application. Changing this forces a new resource to be created.
 
 Type: `string`
 

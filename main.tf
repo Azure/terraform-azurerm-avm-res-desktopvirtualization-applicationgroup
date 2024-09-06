@@ -5,13 +5,14 @@ resource "azurerm_virtual_desktop_application_group" "this" {
   name                         = var.virtual_desktop_application_group_name
   resource_group_name          = var.virtual_desktop_application_group_resource_group_name
   type                         = var.virtual_desktop_application_group_type
-  default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
+  default_desktop_display_name = var.virtual_desktop_application_group_type
   description                  = var.virtual_desktop_application_group_description
   friendly_name                = var.virtual_desktop_application_group_friendly_name
   tags                         = var.virtual_desktop_application_group_tags
 
   dynamic "timeouts" {
     for_each = var.virtual_desktop_application_group_timeouts == null ? [] : [var.virtual_desktop_application_group_timeouts]
+
     content {
       create = timeouts.value.create
       delete = timeouts.value.delete
@@ -57,12 +58,14 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 
   dynamic "enabled_log" {
     for_each = each.value.log_categories
+
     content {
       category = enabled_log.value
     }
   }
   dynamic "enabled_log" {
     for_each = each.value.log_groups
+
     content {
       category_group = enabled_log.value
     }

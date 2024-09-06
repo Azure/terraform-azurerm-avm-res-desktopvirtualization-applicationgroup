@@ -53,7 +53,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source                                        = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version                                       = "0.1.5"
+  version                                       = "0.2.1"
   virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
   virtual_desktop_host_pool_name                = var.host_pool
   virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
@@ -151,11 +151,11 @@ Description: The name of the AVD Host Pool to assign the application group to.
 
 Type: `string`
 
-Default: `"avdhostpool"`
+Default: `"vdhostpool"`
 
 ### <a name="input_virtual_desktop_application_group_default_desktop_display_name"></a> [virtual\_desktop\_application\_group\_default\_desktop\_display\_name](#input\_virtual\_desktop\_application\_group\_default\_desktop\_display\_name)
 
-Description: (Optional) Option to set the display name for the default sessionDesktop desktop when `type` is set to `Desktop`.
+Description: (Optional) Option to set the display name for the default desktop application. Changing this forces a new resource to be created.
 
 Type: `string`
 
@@ -183,7 +183,7 @@ Description: (Required) The name of the Virtual Desktop Application Group. Chang
 
 Type: `string`
 
-Default: `"vdappgroup"`
+Default: `"VdappGroup"`
 
 ### <a name="input_virtual_desktop_application_group_type"></a> [virtual\_desktop\_application\_group\_type](#input\_virtual\_desktop\_application\_group\_type)
 
@@ -211,7 +211,7 @@ Version:
 
 Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
 
-Version: 0.1.5
+Version: 0.2.1
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
