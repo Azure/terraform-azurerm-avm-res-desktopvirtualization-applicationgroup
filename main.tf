@@ -5,7 +5,7 @@ resource "azurerm_virtual_desktop_application_group" "this" {
   name                         = var.virtual_desktop_application_group_name
   resource_group_name          = var.virtual_desktop_application_group_resource_group_name
   type                         = var.virtual_desktop_application_group_type
-  default_desktop_display_name = var.virtual_desktop_application_group_type
+  default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
   description                  = var.virtual_desktop_application_group_description
   friendly_name                = var.virtual_desktop_application_group_friendly_name
   tags                         = var.virtual_desktop_application_group_tags
