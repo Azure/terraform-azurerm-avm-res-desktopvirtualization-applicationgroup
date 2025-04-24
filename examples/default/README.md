@@ -24,7 +24,12 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+  subscription_id = var.subscription_id
 }
 
 # This ensures we have unique CAF compliant names for our resources.
@@ -53,7 +58,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source                                        = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version                                       = "0.2.1"
+  version                                       = ">= 0.3.0"
   virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
   virtual_desktop_host_pool_name                = var.host_pool
   virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
@@ -129,7 +134,13 @@ The following resources are used by this module:
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
 
-No required inputs.
+The following input variables are required:
+
+### <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id)
+
+Description: The subscription ID for the Azure account.
+
+Type: `string`
 
 ## Optional Inputs
 
@@ -211,7 +222,7 @@ Version:
 
 Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
 
-Version: 0.2.1
+Version: >= 0.3.0
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
