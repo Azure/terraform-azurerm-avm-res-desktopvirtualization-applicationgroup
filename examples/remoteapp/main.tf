@@ -41,14 +41,15 @@ resource "azurerm_log_analytics_workspace" "this" {
 }
 
 module "avm_res_desktopvirtualization_hostpool" {
-  source                                        = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version                                       = "0.2.1"
-  virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
-  virtual_desktop_host_pool_name                = var.host_pool
-  virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
-  virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
-  virtual_desktop_host_pool_type                = "Pooled"
+  source  = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
+  version = "0.2.1"
+
   resource_group_name                           = azurerm_resource_group.this.name
+  virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
+  virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
+  virtual_desktop_host_pool_name                = var.host_pool
+  virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
+  virtual_desktop_host_pool_type                = "Pooled"
   diagnostic_settings = {
     to_law = {
       name                  = "to-law"
@@ -80,16 +81,17 @@ resource "azurerm_role_assignment" "this" {
 
 # This is the module desktop application group
 module "appgroup" {
-  source                                                         = "../../"
+  source = "../../"
+
+  virtual_desktop_application_group_host_pool_id                 = module.avm_res_desktopvirtualization_hostpool.resource.id
+  virtual_desktop_application_group_location                     = azurerm_resource_group.this.location
+  virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
+  virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
+  virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
   enable_telemetry                                               = var.enable_telemetry
   virtual_desktop_application_group_default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
   virtual_desktop_application_group_description                  = var.virtual_desktop_application_group_description
   virtual_desktop_application_group_friendly_name                = var.virtual_desktop_application_group_friendly_name
-  virtual_desktop_application_group_host_pool_id                 = module.avm_res_desktopvirtualization_hostpool.resource.id
-  virtual_desktop_application_group_location                     = azurerm_resource_group.this.location
-  virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
-  virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
-  virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
 }
 
 # Sample applications
