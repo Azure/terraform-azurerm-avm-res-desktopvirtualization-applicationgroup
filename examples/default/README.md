@@ -74,7 +74,7 @@ module "avm_res_desktopvirtualization_hostpool" {
       workspace_resource_id = azurerm_log_analytics_workspace.this.id
     }
   }
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 /*
@@ -110,7 +110,7 @@ module "appgroup" {
   virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
   virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
   virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
-  enable_telemetry                                               = false
+  enable_telemetry                                               = var.enable_telemetry
   virtual_desktop_application_group_default_desktop_display_name = var.virtual_desktop_application_group_default_desktop_display_name
   virtual_desktop_application_group_description                  = var.virtual_desktop_application_group_description
   virtual_desktop_application_group_friendly_name                = var.virtual_desktop_application_group_friendly_name
@@ -159,7 +159,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ### <a name="input_host_pool"></a> [host\_pool](#input\_host\_pool)
 
