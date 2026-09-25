@@ -1,7 +1,7 @@
 # Create Azure Virtual Desktop application group
 resource "azurerm_virtual_desktop_application_group" "this" {
   host_pool_id                 = var.virtual_desktop_application_group_host_pool_id
-  location                     = var.virtual_desktop_application_group_location
+  location                     = var.location
   name                         = var.virtual_desktop_application_group_name
   resource_group_name          = var.virtual_desktop_application_group_resource_group_name
   type                         = var.virtual_desktop_application_group_type

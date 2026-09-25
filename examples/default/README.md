@@ -60,7 +60,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source  = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version = ">= 0.3.0"
+  version = "~> 0.4.0"
 
   resource_group_name                           = azurerm_resource_group.this.name
   virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
@@ -105,8 +105,8 @@ resource "azurerm_role_assignment" "this" {
 module "appgroup" {
   source = "../../"
 
+  location                                                       = azurerm_resource_group.this.location
   virtual_desktop_application_group_host_pool_id                 = module.avm_res_desktopvirtualization_hostpool.resource.id
-  virtual_desktop_application_group_location                     = azurerm_resource_group.this.location
   virtual_desktop_application_group_name                         = var.virtual_desktop_application_group_name
   virtual_desktop_application_group_resource_group_name          = azurerm_resource_group.this.name
   virtual_desktop_application_group_type                         = var.virtual_desktop_application_group_type
@@ -227,7 +227,7 @@ Version:
 
 Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
 
-Version: >= 0.3.0
+Version: ~> 0.4.0
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
