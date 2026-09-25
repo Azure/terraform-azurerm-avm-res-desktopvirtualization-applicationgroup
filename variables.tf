@@ -1,12 +1,12 @@
-variable "virtual_desktop_application_group_host_pool_id" {
+variable "location" {
   type        = string
-  description = "(Required) Resource ID for a Virtual Desktop Host Pool to associate with the Virtual Desktop Application Group. Changing the name forces a new resource to be created."
+  description = "(Required) The location/region where the Virtual Desktop Application Group is located. Changing this forces a new resource to be created."
   nullable    = false
 }
 
-variable "virtual_desktop_application_group_location" {
+variable "virtual_desktop_application_group_host_pool_id" {
   type        = string
-  description = "(Required) The location/region where the Virtual Desktop Application Group is located. Changing this forces a new resource to be created."
+  description = "(Required) Resource ID for a Virtual Desktop Host Pool to associate with the Virtual Desktop Application Group. Changing the name forces a new resource to be created."
   nullable    = false
 }
 
