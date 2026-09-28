@@ -60,7 +60,7 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source  = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version = "~> 0.4.0"
+  version = "0.4.0"
 
   resource_group_name                           = azurerm_resource_group.this.name
   virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
@@ -77,29 +77,27 @@ module "avm_res_desktopvirtualization_hostpool" {
   enable_telemetry = var.enable_telemetry
 }
 
-/*
 # Get an existing built-in role definition
-data "azurerm_role_definition" "this" {
-  name = "Desktop Virtualization User"
-}
+# data "azurerm_role_definition" "this" {
+#   name = "Desktop Virtualization User"
+# }
 
 # This sample will create the group defined in the variable user_group_nam. It allows the code to deploy for an end to end to deployment however this is not a supported scenario and expects you to have the user group already synchcronized in Microsoft Entra ID per https://learn.microsoft.com/en-us/azure/virtual-desktop/prerequisites?tabs=portal#users
 # You should replace this with your own code to a data block to fetch the group in your own environment.
 
-data "azuread_group" "existing" {
-  display_name     = var.user_group_name
-  security_enabled = true
-}
+# data "azuread_group" "existing" {
+#   display_name     = var.user_group_name
+#   security_enabled = true
+# }
 
 
 # Assign the Azure AD group to the application group
-resource "azurerm_role_assignment" "this" {
-  principal_id                     = data.azuread_group.existing.id
-  scope                            = module.appgroup.resource.id
-  role_definition_id               = data.azurerm_role_definition.this.id
-  skip_service_principal_aad_check = false
-}
-*/
+# resource "azurerm_role_assignment" "this" {
+#   principal_id                     = data.azuread_group.existing.id
+#   scope                            = module.appgroup.resource.id
+#   role_definition_id               = data.azurerm_role_definition.this.id
+#   skip_service_principal_aad_check = false
+# }
 
 # This is the module desktop application group
 module "appgroup" {
@@ -139,13 +137,7 @@ The following resources are used by this module:
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
 
-The following input variables are required:
-
-### <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id)
-
-Description: The subscription ID for the Azure account.
-
-Type: `string`
+No required inputs.
 
 ## Optional Inputs
 
@@ -168,6 +160,14 @@ Description: The name of the AVD Host Pool to assign the application group to.
 Type: `string`
 
 Default: `"vdhostpool"`
+
+### <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id)
+
+Description: The subscription ID for the Azure account. Defaults to the ARM\_SUBSCRIPTION\_ID environment variable.
+
+Type: `string`
+
+Default: `null`
 
 ### <a name="input_virtual_desktop_application_group_default_desktop_display_name"></a> [virtual\_desktop\_application\_group\_default\_desktop\_display\_name](#input\_virtual\_desktop\_application\_group\_default\_desktop\_display\_name)
 
@@ -227,7 +227,7 @@ Version:
 
 Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
 
-Version: ~> 0.4.0
+Version: 0.4.0
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
