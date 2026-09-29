@@ -40,15 +40,15 @@ The following resources are used by this module:
 
 The following input variables are required:
 
-### <a name="input_virtual_desktop_application_group_host_pool_id"></a> [virtual\_desktop\_application\_group\_host\_pool\_id](#input\_virtual\_desktop\_application\_group\_host\_pool\_id)
+### <a name="input_location"></a> [location](#input\_location)
 
-Description: (Required) Resource ID for a Virtual Desktop Host Pool to associate with the Virtual Desktop Application Group. Changing the name forces a new resource to be created.
+Description: (Required) The location/region where the Virtual Desktop Application Group is located. Changing this forces a new resource to be created.
 
 Type: `string`
 
-### <a name="input_virtual_desktop_application_group_location"></a> [virtual\_desktop\_application\_group\_location](#input\_virtual\_desktop\_application\_group\_location)
+### <a name="input_virtual_desktop_application_group_host_pool_id"></a> [virtual\_desktop\_application\_group\_host\_pool\_id](#input\_virtual\_desktop\_application\_group\_host\_pool\_id)
 
-Description: (Required) The location/region where the Virtual Desktop Application Group is located. Changing this forces a new resource to be created.
+Description: (Required) Resource ID for a Virtual Desktop Host Pool to associate with the Virtual Desktop Application Group. Changing the name forces a new resource to be created.
 
 Type: `string`
 

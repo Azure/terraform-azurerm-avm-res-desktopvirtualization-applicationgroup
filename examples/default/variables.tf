@@ -1,6 +1,7 @@
 variable "subscription_id" {
   type        = string
-  description = "The subscription ID for the Azure account."
+  default     = null
+  description = "The subscription ID for the Azure account. Defaults to the ARM_SUBSCRIPTION_ID environment variable."
 }
 
 variable "enable_telemetry" {
