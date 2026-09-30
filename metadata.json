@@ -4,7 +4,6 @@
   "moduleDescription": "AVM Resource Module for Azure Virtual Desktop (AVD) Application Group",
   "canonicalType": "Microsoft.DesktopVirtualization/applicationGroups",
   "owners": [
-    "jensheerin",
     "sihbher"
   ],
   "telemetryIdPrefix": "46d3xtrf.res.f63a0cc"
