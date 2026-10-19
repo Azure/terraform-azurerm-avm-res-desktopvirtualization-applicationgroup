@@ -1,9 +1,3 @@
-variable "subscription_id" {
-  type        = string
-  default     = null
-  description = "The subscription ID for the Azure account. Defaults to the ARM_SUBSCRIPTION_ID environment variable."
-}
-
 variable "enable_telemetry" {
   type        = bool
   default     = true
@@ -18,6 +12,12 @@ variable "host_pool" {
   type        = string
   default     = "vdhostpool"
   description = "The name of the AVD Host Pool to assign the application group to."
+}
+
+variable "subscription_id" {
+  type        = string
+  default     = null
+  description = "The subscription ID for the Azure account. Defaults to the ARM_SUBSCRIPTION_ID environment variable."
 }
 
 variable "virtual_desktop_application_group_default_desktop_display_name" {
