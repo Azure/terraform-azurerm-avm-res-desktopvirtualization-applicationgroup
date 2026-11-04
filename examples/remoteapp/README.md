@@ -9,6 +9,8 @@ It expects you to have the user group already synchcronized in Microsoft Entra I
 
 Change default values in the variables.tf file for your environment.
 
+Host Pool 0.6.0 configures RDP redirection defaults for drives, devices, USB, clipboard, printers, COM ports, and smartcards, and manages `custom_rdp_properties` on updates. The previous 0.2.1 dependency left the value unset and ignored changes. It also passed the default VM template as the JSON string `null`; 0.6.0 leaves the template unset. Review the plan before upgrading an existing example deployment.
+
 ```hcl
 terraform {
   required_version = ">= 1.9, < 2.0"
@@ -17,11 +19,6 @@ terraform {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 3.71, < 5.0.0"
-    }
-    # tflint-ignore: terraform_unused_required_providers
-    modtm = {
-      source  = "registry.terraform.io/azure/modtm"
-      version = "~> 0.3"
     }
     random = {
       source  = "hashicorp/random"
@@ -60,11 +57,11 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source  = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version = "0.2.1"
+  version = "0.6.0"
 
+  location                                      = azurerm_resource_group.this.location
   resource_group_name                           = azurerm_resource_group.this.name
   virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
-  virtual_desktop_host_pool_location            = azurerm_resource_group.this.location
   virtual_desktop_host_pool_name                = var.host_pool
   virtual_desktop_host_pool_resource_group_name = azurerm_resource_group.this.name
   virtual_desktop_host_pool_type                = "Pooled"
@@ -146,8 +143,6 @@ The following requirements are needed by this module:
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9, < 2.0)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71, < 5.0.0)
-
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
 - <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
 
@@ -246,7 +241,7 @@ Version:
 
 Source: Azure/avm-res-desktopvirtualization-hostpool/azurerm
 
-Version: 0.2.1
+Version: 0.6.0
 
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
